@@ -1,0 +1,53 @@
+#################### Shoes API ####################
+
+### Authenticate User Login with Username
+POST http://localhost:3006/api/auth/login
+content-type: application/json
+
+{
+	"username": "ntruter42",
+	"email": "",
+	"password": "codex123"
+}
+
+### Authenticate User Login with Email
+POST http://localhost:3006/api/auth/login
+content-type: application/json
+
+{
+	"username": "",
+	"email": "emusk69@x.com",
+	"password": "tesla123"
+}
+
+### Fail to Authenticate User Login with Email
+POST http://localhost:3006/api/auth/login
+content-type: application/json
+
+{
+	"username": "",
+	"email": "emusk69@x.com",
+	"password": "codex123"
+}
+
+### WIP #######################################################################
+
+### Register New User
+POST http://localhost:3006/api/auth/register
+content-type: application/json
+
+{
+	"email": "",
+	"username": "",
+	"full_name": ""
+	"password": "codex123"
+}
+
+
+### Request Template
+POST http://localhost:3006/api/auth
+content-type: application/json
+
+{
+	"key": "value"
+}

@@ -5,9 +5,19 @@ const auth_api = Router();
 
 auth_api.post('/login', async (req, res) => {
 	try {
-		// 
+		const user = await data.getUserID(req.body.username, req.body.email);
+		const auth = await data.validatePassword(user.user_id, req.body.password) ? true : false;
+
+		res.json({
+			status: "Success",
+			user_id: user.user_id,
+			auth
+		})
 	} catch (error) {
-		// 
+		res.json({
+			status: "Error",
+			error: error.message
+		})
 	}
 });
 
