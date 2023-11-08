@@ -54,7 +54,7 @@ auth_api.post('/register', async (req, res) => {
 			// req.flash("log", `pw: ${req.body.password}, cpw: ${req.body.confirm}`);
 			throw Error("Passwords do not match");
 		} else {
-			user = await data.createUser(req.body.username, req.body.password);
+			user = await data.createUser(req.body.username, req.body.full_name, req.body.password);
 			// req.flash("log", user);
 		}
 
