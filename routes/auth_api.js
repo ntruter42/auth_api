@@ -5,6 +5,8 @@ const auth_api = Router();
 
 auth_api.post('/login', async (req, res) => {
 	try {
+		// TODO: Use jsonwebtoken for authentication
+
 		const user = await data.getUserID(req.body.username);
 		// req.flash("log", user);
 
