@@ -6,7 +6,6 @@ content-type: application/json
 
 {
 	"username": "ntruter42",
-	"email": "",
 	"password": "codex123"
 }
 
@@ -15,34 +14,61 @@ POST http://localhost:3006/api/auth/login
 content-type: application/json
 
 {
-	"username": "",
-	"email": "emusk69@x.com",
+	"username": "emusk69",
 	"password": "tesla123"
 }
 
-### Fail to Authenticate User Login with Email
+### Fail to Authenticate User Login with Empty Username
 POST http://localhost:3006/api/auth/login
 content-type: application/json
 
 {
 	"username": "",
-	"email": "emusk69@x.com",
 	"password": "codex123"
 }
 
-### WIP #######################################################################
+### Fail to Authenticate User Login with Non-existent Username
+POST http://localhost:3006/api/auth/login
+content-type: application/json
 
-### Register New User
+{
+	"username": "nonexistentusername",
+	"password": "codex123"
+}
+
+### Fail to Authenticate User Login with Wrong Password
+POST http://localhost:3006/api/auth/login
+content-type: application/json
+
+{
+	"username": "ntruter42",
+	"password": "codex124"
+}
+
+### Register a New User
 POST http://localhost:3006/api/auth/register
 content-type: application/json
 
 {
-	"email": "",
-	"username": "",
-	"full_name": ""
-	"password": "codex123"
+	"username": "emusk",
+	"full_name": "Elon Musk",
+	"password": "tesla123",
+	"confirm": "tesla123"
 }
 
+### Delete an Existing User
+POST http://localhost:3006/api/auth/remove
+content-type: application/json
+
+{
+	"username": "emusk",
+	"password": "tesla123"
+}
+
+### View List of Users
+GET http://localhost:3006/api/auth/users
+
+### WIP #######################################################################
 
 ### Request Template
 POST http://localhost:3006/api/auth
