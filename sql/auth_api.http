@@ -9,15 +9,6 @@ content-type: application/json
 	"password": "codex123"
 }
 
-### Authenticate User Login with Email
-POST http://localhost:3006/api/auth/login
-content-type: application/json
-
-{
-	"username": "emusk69",
-	"password": "tesla123"
-}
-
 ### Fail to Authenticate User Login with Empty Username
 POST http://localhost:3006/api/auth/login
 content-type: application/json
@@ -50,10 +41,19 @@ POST http://localhost:3006/api/auth/register
 content-type: application/json
 
 {
-	"username": "emusk",
+	"username": "emusk69",
 	"full_name": "Elon Musk",
 	"password": "tesla123",
 	"confirm": "tesla123"
+}
+
+### Authenticate User Login after Registering
+POST http://localhost:3006/api/auth/login
+content-type: application/json
+
+{
+	"username": "emusk69",
+	"password": "tesla123"
 }
 
 ### Delete an Existing User

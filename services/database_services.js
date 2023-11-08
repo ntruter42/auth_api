@@ -38,6 +38,16 @@ export default (db) => {
 		return await db.oneOrNone(query);
 	}
 
+	const removeUser = async (username, password) => {
+		let query = `
+			DELETE FROM ${t.users}
+			WHERE username = '${username}',
+			AND password = '${password}'
+		`;
+
+		return await db.oneOrNone(query);
+	}
+
 	const getUsers = async (username) => {
 		let query = `
 			SELECT * FROM ${t.users}
@@ -50,6 +60,7 @@ export default (db) => {
 		getUsers,
 		getUserID,
 		validatePassword,
-		createUser
+		createUser,
+		removeUser
 	}
 }

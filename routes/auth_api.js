@@ -52,7 +52,7 @@ auth_api.post('/register', async (req, res) => {
 			// req.flash("log", `pw: ${req.body.password}, cpw: ${req.body.confirm}`);
 			throw Error("Passwords do not match");
 		} else {
-			user = await data.createUser(req.body);
+			user = await data.createUser(req.body.username, req.body.password);
 			// req.flash("log", user);
 		}
 
@@ -65,6 +65,23 @@ auth_api.post('/register', async (req, res) => {
 			user_id: user.user_id,
 			// log: req.flash("log")[0]
 		})
+	} catch (error) {
+		res.json({
+			status: "Error",
+			error: error.message,
+			// log: req.flash("log")[0]
+		})
+	}
+});
+
+
+auth_api.post('/remove', async (req, res) => {
+	try {
+		if (!req.body.username) {
+			throw Error("Please provide a username");
+		} else {
+			await data.removeUser(req.body.username);
+		}
 	} catch (error) {
 		res.json({
 			status: "Error",
