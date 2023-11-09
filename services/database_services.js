@@ -4,62 +4,46 @@ export default (db) => {
 		users: `${s}.users`
 	};
 
-	const getUserID = async (username) => {
-		let query = `
-			SELECT user_id FROM ${t.users}
-			WHERE username = '${username}'
-		`;
+	const getUsers = async () => {
+		let query = `SELECT * FROM ${t.users}`;
 
-		return await db.oneOrNone(query);
+		return await db.manyOrNone(query);
 	}
 
-	const validatePassword = async (user_id, password) => {
+	const getUser = async (username) => {
 		let query = `
 			SELECT * FROM ${t.users}
-			WHERE user_id = '${user_id}'
-			AND password = '${password}'
+			WHERE username = $1
 		`;
 
-		return db.oneOrNone(query);
+		return await db.oneOrNone(query, [username]);
 	}
 
 	const createUser = async (new_user) => {
 		let query = `
 			INSERT INTO ${t.users} (username, full_name, password)
-			VALUES (
-				'${new_user.username}',
-				'${new_user.full_name}',
-				'${new_user.password}'
-			)
+			VALUES ($1, $2, $3)
 			ON CONFLICT DO NOTHING
-			RETURNING user_id
+			RETURNING *
 		`;
 
-		return await db.oneOrNone(query);
+		return await db.oneOrNone(query, [new_user.username, new_user.full_name, new_user.password]);
 	}
 
 	const removeUser = async (username, password) => {
 		let query = `
 			DELETE FROM ${t.users}
-			WHERE username = '${username}',
-			AND password = '${password}'
+			WHERE username = $1
+			AND password = $2
+			RETURNING *
 		`;
 
-		return await db.oneOrNone(query);
-	}
-
-	const getUsers = async (username) => {
-		let query = `
-			SELECT * FROM ${t.users}
-		`;
-
-		return await db.manyOrNone(query);
+		return await db.oneOrNone(query, [username, password]);
 	}
 
 	return {
 		getUsers,
-		getUserID,
-		validatePassword,
+		getUser,
 		createUser,
 		removeUser
 	}

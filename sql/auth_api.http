@@ -61,7 +61,7 @@ POST http://localhost:3006/api/auth/remove
 content-type: application/json
 
 {
-	"username": "emusk",
+	"username": "emusk69",
 	"password": "tesla123"
 }
 

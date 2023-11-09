@@ -8,12 +8,12 @@ import auth_api from "./routes/auth_api.js";
 const app = app_setup();
 const db = db_config();
 const auth = auth_services();
-const data = database_services(db);
+const service = database_services(db);
 
 app.use('/', auth_routes);
 app.use('/api/auth', auth_api);
 
-export { data, auth };
+export { service, auth };
 
 const PORT = process.env.PORT || 3006;
 app.listen(PORT, () => {
