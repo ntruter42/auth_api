@@ -1,52 +1,83 @@
 import { Router } from "express";
 import { service, auth } from "../index.js";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 const auth_api = Router();
 
+class CustomError {
+	status = 'Error';
+	constructor(name, error, message) {
+		this.name = name;
+		this.error = error;
+		this.message = message;
+	}
+}
+
 auth_api.post('/login', async (req, res) => {
 	try {
-		// TODO: Use jsonwebtoken for authentication
-
 		if (!req.body.username) {
-			throw {
-				name: "InputError",
-				status: "Error",
-				message: "Enter a username.",
-				error: "Empty username"
-			};
+			throw new CustomError(
+				"InputError",
+				"Empty username",
+				"Enter a username"
+			);
 		}
 
 		const user = await service.getUser(req.body.username);
 		if (!user || !user.user_id) {
-			throw {
-				name: "AuthenticationError",
-				status: "Error",
-				message: "The username or password entered is incorrect.",
-				error: "Username not found"
-			};
+			throw new CustomError(
+				"AuthenticationError",
+				"Username not found",
+				"The username or password entered is incorrect"
+			);
 		}
 
 		if (user.password !== req.body.password) {
-			throw {
-				name: "AuthenticationError",
-				status: "Error",
-				message: "The username or password entered is incorrect.",
-				error: "Incorrect password"
-			};
+			throw new CustomError(
+				"AuthenticationError",
+				"Incorrect password",
+				"The username or password entered is incorrect"
+			);
 		}
 
+		const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
 		res.json({
 			status: "Success",
+			token,
 			user: { ...user, password: undefined }
+		});
+	} catch (error) {
+		res.status(400).json(error);
+	}
+});
+
+auth_api.post('/verify', async (req, res) => {
+	try {
+		const token = req.header('authorization').startsWith('Bearer')
+			? req.header('authorization').split(' ')[1]
+			: undefined;
+		if (!token) {
+			throw new CustomError(
+				"TokenError",
+				"Invalid Token",
+				"The token provided is missing or invalid"
+			);
+		}
+
+		const auth = jwt.verify(token, process.env.SECRET_KEY);
+		res.json({
+			status: "Success",
+			auth: auth ? true : false
 		})
 	} catch (error) {
-		res.json(error)
+		res.status(400).json(error);
 	}
 });
 
 auth_api.post('/logout', async (req, res) => {
 	try {
-		// TODO: keep user logged in until expiry date and time
+		// 
 	} catch (error) {
 		// 
 	}
@@ -55,31 +86,28 @@ auth_api.post('/logout', async (req, res) => {
 auth_api.post('/register', async (req, res) => {
 	try {
 		if (!req.body.password || !req.body.confirm) {
-			throw {
-				name: "InputError",
-				status: "Error",
-				message: "Enter a password and confirmation password.",
-				error: "Empty password"
-			};
+			throw new CustomError(
+				"InputError",
+				"Empty password",
+				"Enter a password and confirmation password"
+			);
 		}
 
 		if (req.body.password !== req.body.confirm) {
-			throw {
-				name: "InputError",
-				status: "Error",
-				message: "Passwords do not match.",
-				error: "Invalid password confirmation"
-			};
+			throw new CustomError(
+				"InputError",
+				"Invalid password confirmation",
+				"Passwords do not match"
+			);
 		}
 
 		const user = await service.createUser(req.body);
 		if (!user) {
-			throw {
-				name: "DuplicateError",
-				status: "Error",
-				message: "The username entered is already in use.",
-				error: "Duplicate username"
-			};
+			throw new CustomError(
+				"DuplicateError",
+				"Duplicate username",
+				"The username entered is already in use"
+			);
 		}
 
 		res.json({
@@ -87,7 +115,7 @@ auth_api.post('/register', async (req, res) => {
 			user: { ...user, password: undefined }
 		})
 	} catch (error) {
-		res.json(error)
+		res.status(400).json(error);
 	}
 });
 
@@ -95,22 +123,20 @@ auth_api.post('/register', async (req, res) => {
 auth_api.post('/remove', async (req, res) => {
 	try {
 		if (!req.body.username) {
-			throw {
-				name: "InputError",
-				status: "Error",
-				message: "Please provide a username.",
-				error: "Empty username"
-			};
+			throw new CustomError(
+				"InputError",
+				"Empty username",
+				"Please provide a username"
+			);
 		}
 
 		const user = await service.removeUser(req.body.username, req.body.password);
 		if (!user || !user.user_id) {
-			throw {
-				name: "DeletionError",
-				status: "Error",
-				message: "The username or password entered is incorrect.",
-				error: "Incorrect username or password"
-			};
+			throw new CustomError(
+				"DeletionError",
+				"Incorrect username or password",
+				"The username or password entered is incorrect"
+			);
 		}
 
 		res.json({
@@ -118,7 +144,7 @@ auth_api.post('/remove', async (req, res) => {
 			deleted_user: { ...user, password: undefined }
 		})
 	} catch (error) {
-		res.json(error)
+		res.status(400).json(error);
 	}
 });
 
@@ -139,7 +165,7 @@ auth_api.get('/users', async (req, res) => {
 			users
 		})
 	} catch (error) {
-		res.json(error)
+		res.status(400).json(error);
 	}
 });
 

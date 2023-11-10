@@ -2,16 +2,23 @@
 
 ### Authenticate User Login with Username
 POST http://localhost:3006/api/auth/login
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "ntruter42",
 	"password": "codex123"
 }
 
+### Verify User AUthentication with Token
+POST http://localhost:3006/api/auth/verify
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDAwLCJ1c2VybmFtZSI6Im50cnV0ZXI0MiIsImZ1bGxfbmFtZSI6Ik5pY2hvbGFzIFRydXRlciIsInBhc3N3b3JkIjoiY29kZXgxMjMiLCJpYXQiOjE3MDA0MzMwNjYsImV4cCI6MTcwMDQzNjY2Nn0.RAJCtCVziRzepVMCGqilfv67xL5-Li7kooRck27rYQU
+
+{}
+
 ### Fail to Authenticate User Login with Empty Username
 POST http://localhost:3006/api/auth/login
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "",
@@ -20,7 +27,7 @@ content-type: application/json
 
 ### Fail to Authenticate User Login with Non-existent Username
 POST http://localhost:3006/api/auth/login
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "nonexistentusername",
@@ -29,7 +36,7 @@ content-type: application/json
 
 ### Fail to Authenticate User Login with Wrong Password
 POST http://localhost:3006/api/auth/login
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "ntruter42",
@@ -38,7 +45,7 @@ content-type: application/json
 
 ### Register a New User
 POST http://localhost:3006/api/auth/register
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "emusk69",
@@ -49,7 +56,7 @@ content-type: application/json
 
 ### Authenticate User Login after Registering
 POST http://localhost:3006/api/auth/login
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "emusk69",
@@ -58,7 +65,7 @@ content-type: application/json
 
 ### Delete an Existing User
 POST http://localhost:3006/api/auth/remove
-content-type: application/json
+Content-Type: application/json
 
 {
 	"username": "emusk69",
@@ -72,7 +79,7 @@ GET http://localhost:3006/api/auth/users
 
 ### Template
 POST http://localhost:3006/api/auth
-content-type: application/json
+Content-Type: application/json
 
 {
 	"key": "value"
