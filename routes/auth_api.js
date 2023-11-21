@@ -14,7 +14,7 @@ class CustomError {
 	}
 }
 
-auth_api.post('/login', async (req, res) => {
+auth_api.post('/user', async (req, res) => {
 	try {
 		if (!req.body.username) {
 			throw new CustomError(
@@ -33,19 +33,18 @@ auth_api.post('/login', async (req, res) => {
 			);
 		}
 
-		if (user.password !== req.body.password) {
-			throw new CustomError(
-				"AuthenticationError",
-				"Incorrect password",
-				"The username or password entered is incorrect"
-			);
-		}
+		// if (!(await auth.comparePasswords(req.body.password, user.password))) {
+		// 	throw new CustomError(
+		// 		"AuthenticationError",
+		// 		"Incorrect password",
+		// 		"The username or password entered is incorrect"
+		// 	);
+		// }
 
 		const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: 60 * 60 });
 		res.json({
 			status: "Success",
-			token,
-			user: { ...user, password: undefined }
+			token
 		});
 	} catch (error) {
 		res.status(400).json(error);
@@ -85,21 +84,22 @@ auth_api.post('/logout', async (req, res) => {
 
 auth_api.post('/register', async (req, res) => {
 	try {
-		if (!req.body.password || !req.body.confirm) {
-			throw new CustomError(
-				"InputError",
-				"Empty password",
-				"Enter a password and confirmation password"
-			);
-		}
+		// if (!req.body.password || !req.body.confirm) {
+		// 	throw new CustomError(
+		// 		"InputError",
+		// 		"Empty password",
+		// 		"Enter a password and confirmation password"
+		// 	);
+		// }
 
-		if (req.body.password !== req.body.confirm) {
-			throw new CustomError(
-				"InputError",
-				"Invalid password confirmation",
-				"Passwords do not match"
-			);
-		}
+		// if (await auth.comparePasswords(req.body.password, req.body.confirm)) {
+
+		// 	throw new CustomError(
+		// 		"InputError",
+		// 		"Invalid password confirmation",
+		// 		"Passwords do not match"
+		// 	);
+		// }
 
 		const user = await service.createUser(req.body);
 		if (!user) {

@@ -5,7 +5,7 @@ export default (db) => {
 	};
 
 	const getUsers = async () => {
-		let query = `SELECT * FROM ${t.users}`;
+		let query = `SELECT user_id, username, full_name FROM ${t.users}`;
 
 		return await db.manyOrNone(query);
 	}
